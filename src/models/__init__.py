@@ -2,5 +2,5 @@ __all__ = (
     "Base",
     "Wallet",
 )
-from models.base import Base
-from models.wallet import Wallet
+from src.models.base import Base
+from src.models.wallet import Wallet

@@ -6,16 +6,17 @@ Create Date: 2026-10-12 18:44:15.512302
 
 """
 
-from typing import Sequence, Union
+from collections.abc import Sequence
+
+import sqlalchemy as sa
 
 from alembic import op
-import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision: str = "81a38e40f035"
-down_revision: Union[str, Sequence[str], None] = None
-branch_labels: Union[str, Sequence[str], None] = None
-depends_on: Union[str, Sequence[str], None] = None
+down_revision: str | Sequence[str] | None = None
+branch_labels: str | Sequence[str] | None = None
+depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:
@@ -36,9 +37,7 @@ def upgrade() -> None:
             server_default=sa.text("now()"),
             nullable=False,
         ),
-        sa.CheckConstraint(
-            "balance >= 0", name="ck_wallets_balance_non_negative"
-        ),
+        sa.CheckConstraint("balance >= 0", name="ck_wallets_balance_non_negative"),
         sa.PrimaryKeyConstraint("id"),
     )
     # ### end Alembic commands ###

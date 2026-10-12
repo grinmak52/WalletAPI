@@ -12,6 +12,7 @@ class OperationType(StrEnum):
 
 class WalletOperation(BaseModel):
     """Операции с кошельком"""
+
     model_config = ConfigDict(extra="forbid")
 
     operation_type: OperationType

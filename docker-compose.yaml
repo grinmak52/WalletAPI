@@ -1,5 +1,14 @@
-
 services:
+  api:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      APP_CONFIG__DB__URL: postgresql+asyncpg://wallet_user:password@db:5432/wallet_db
+    depends_on:
+      db:
+        condition: service_healthy
   db:
     image: postgres:17
     container_name: wallet_db
@@ -20,5 +29,26 @@ services:
       timeout: 3s
       retries: 5
 
+  db-test:
+    image: postgres:17
+    container_name: wallet_test_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: wallet_test_db
+      POSTGRES_USER: wallet_user
+      POSTGRES_PASSWORD: change_me
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U wallet_user -d wallet_test_db
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
 volumes:
   postgres_data:
+  postgres_test_data:

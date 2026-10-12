@@ -1,10 +1,10 @@
 from pathlib import Path
 
-from pydantic import BaseModel
-from pydantic import PostgresDsn
+from pydantic import BaseModel, PostgresDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
 
 class RunConfig(BaseModel):
     host: str = "127.0.0.1"

@@ -1,8 +1,11 @@
+from decimal import Decimal
+from uuid import UUID
+
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.exceptions import WalletNotFoundError, InsufficientFundsError
-from models import Wallet
-from repositories.wallet import WalletRepository
+from src.core.exceptions import InsufficientFundsError, WalletNotFoundError
+from src.models import Wallet
+from src.repositories.wallet import WalletRepository
 
 
 class WalletService:
@@ -17,21 +20,19 @@ class WalletService:
 
         return wallet
 
-    async def get_wallet(self, wallet_id) -> Wallet:
+    async def get_wallet(self, wallet_id: UUID) -> Wallet:
         wallet = await self.repository.get_by_id(wallet_id)
 
         if wallet is None:
-            raise WalletNotFoundError(
-                f"Wallet {wallet_id} not found"
-            )
+            raise WalletNotFoundError(f"Wallet {wallet_id} not found")
 
         return wallet
 
     async def apply_operation(
-            self,
-            wallet_id: UUID,
-            amount: Decimal,
-            operation_type: str,
+        self,
+        wallet_id: UUID,
+        amount: Decimal,
+        operation_type: str,
     ) -> Wallet:
         wallet = await self.repository.apply_operation(
             wallet_id=wallet_id,
@@ -45,13 +46,9 @@ class WalletService:
             )
 
             if existing_wallet is None:
-                raise WalletNotFoundError(
-                    f"Wallet {wallet_id} not found"
-                )
+                raise WalletNotFoundError(f"Wallet {wallet_id} not found")
 
-            raise InsufficientFundsError(
-                f"Insufficient funds in wallet {wallet_id}"
-            )
+            raise InsufficientFundsError(f"Insufficient funds in wallet {wallet_id}")
 
         await self.session.commit()
 

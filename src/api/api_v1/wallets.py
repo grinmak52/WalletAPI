@@ -1,10 +1,10 @@
 from uuid import UUID
 
-from fastapi import APIRouter, status, HTTPException
+from fastapi import APIRouter, HTTPException, status
 
-from api.dependencies import WalletServiceDep
-from core.exceptions import WalletNotFoundError, InsufficientFundsError
-from schemas.wallet import WalletRead, WalletOperation
+from src.api.dependencies import WalletServiceDep
+from src.core.exceptions import InsufficientFundsError, WalletNotFoundError
+from src.schemas.wallet import WalletOperation, WalletRead
 
 router = APIRouter(prefix="/wallets", tags=["Wallets"])
 
@@ -15,7 +15,7 @@ router = APIRouter(prefix="/wallets", tags=["Wallets"])
     status_code=status.HTTP_201_CREATED,
 )
 async def create_wallet(
-        service: WalletServiceDep,
+    service: WalletServiceDep,
 ) -> WalletRead:
     wallet = await service.create_wallet()
     return WalletRead.model_validate(wallet)
@@ -27,8 +27,8 @@ async def create_wallet(
     status_code=status.HTTP_200_OK,
 )
 async def get_wallet(
-        wallet_uuid: UUID,
-        service: WalletServiceDep,
+    wallet_uuid: UUID,
+    service: WalletServiceDep,
 ) -> WalletRead:
     try:
         wallet = await service.get_wallet(wallet_uuid)
@@ -47,9 +47,9 @@ async def get_wallet(
     status_code=status.HTTP_200_OK,
 )
 async def wallet_operation(
-        wallet_uuid: UUID,
-        operation: WalletOperation,
-        service: WalletServiceDep,
+    wallet_uuid: UUID,
+    operation: WalletOperation,
+    service: WalletServiceDep,
 ) -> WalletRead:
     try:
         wallet = await service.apply_operation(

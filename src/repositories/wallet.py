@@ -1,10 +1,11 @@
-from uuid import UUID
 from decimal import Decimal
+from uuid import UUID
 
 from sqlalchemy import update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from models import Wallet
+from src.models import Wallet
+from src.schemas.wallet import OperationType
 
 
 class WalletRepository:
@@ -20,29 +21,34 @@ class WalletRepository:
 
         return wallet
 
-    async def get_by_id(self, wallet_id):
+    async def get_by_id(
+        self,
+        wallet_id: UUID,
+    ) -> Wallet | None:
         return await self.session.get(Wallet, wallet_id)
 
     async def apply_operation(
-            self,
-            wallet_id: UUID,
-            amount: Decimal,
-            operation_type: str,
+        self,
+        wallet_id: UUID,
+        amount: Decimal,
+        operation_type: OperationType,
     ) -> Wallet | None:
         statement = update(Wallet).where(
             Wallet.id == wallet_id,
         )
 
-        if operation_type == "DEPOSIT":
+        if operation_type == OperationType.DEPOSIT:
             statement = statement.values(
                 balance=Wallet.balance + amount,
             )
-        else:
+        elif operation_type == OperationType.WITHDRAW:
             statement = statement.where(
                 Wallet.balance >= amount,
             ).values(
                 balance=Wallet.balance - amount,
             )
+        else:
+            raise ValueError(f"Unsupported operation type: {operation_type}")
 
         statement = statement.returning(Wallet)
 
