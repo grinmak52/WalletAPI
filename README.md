@@ -137,7 +137,7 @@ poetry run pytest
 ```
 
 Адрес тестовой базы по умолчанию:
-`postgresql+asyncpg://wallet_user:change_me@localhost:5434/wallet_test_db`.
+`postgresql+asyncpg://wallet_user:{password}@localhost:5434/wallet_test_db`.
 Его можно переопределить переменной окружения `TEST_DATABASE_URL`.
 
 В тестах проверяются:

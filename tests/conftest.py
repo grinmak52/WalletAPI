@@ -16,7 +16,7 @@ from src.models.wallet import Wallet  # noqa: F401
 
 TEST_DATABASE_URL = os.getenv(
     "TEST_DATABASE_URL",
-    "postgresql+asyncpg://wallet_user:change_me@localhost:5434/wallet_test_db",
+    "postgresql+asyncpg://wallet_user:password@localhost:5434/wallet_test_db",
 )
 
 
