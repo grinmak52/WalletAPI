@@ -21,7 +21,7 @@ TEST_DATABASE_URL = os.getenv(
 
 
 @pytest_asyncio.fixture
-async def client() -> AsyncGenerator[AsyncClient, None]:
+async def client() -> AsyncGenerator[AsyncClient]:
     engine = create_async_engine(TEST_DATABASE_URL)
 
     session_factory = async_sessionmaker(

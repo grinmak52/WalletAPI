@@ -5,7 +5,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      APP_CONFIG__DB__URL: postgresql+asyncpg://wallet_user:password@db:5432/wallet_db
+      APP_CONFIG__DB__URL: postgresql+asyncpg://${POSTGRES_USER:-wallet_user}:${POSTGRES_PASSWORD:-password}@db:5432/${POSTGRES_DB:-wallet_db}
     depends_on:
       db:
         condition: service_healthy
@@ -14,9 +14,9 @@ services:
     container_name: wallet_db
     restart: unless-stopped
     environment:
-      POSTGRES_DB: wallet_db
-      POSTGRES_USER: wallet_user
-      POSTGRES_PASSWORD: password
+      POSTGRES_DB: ${POSTGRES_DB:-wallet_db}
+      POSTGRES_USER: ${POSTGRES_USER:-wallet_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
     ports:
       - "5433:5432"
     volumes:
@@ -35,8 +35,8 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_DB: wallet_test_db
-      POSTGRES_USER: wallet_user
-      POSTGRES_PASSWORD: change_me
+      POSTGRES_USER: ${POSTGRES_USER:-wallet_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
     ports:
       - "5434:5432"
     volumes:
