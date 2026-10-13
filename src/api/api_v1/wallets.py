@@ -55,7 +55,7 @@ async def wallet_operation(
         wallet = await service.apply_operation(
             wallet_id=wallet_uuid,
             amount=operation.amount,
-            operation_type=operation.operation_type.value,
+            operation_type=operation.operation_type,
         )
     except WalletNotFoundError as exc:
         raise HTTPException(

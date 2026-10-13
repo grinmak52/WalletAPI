@@ -37,7 +37,9 @@ def upgrade() -> None:
             server_default=sa.text("now()"),
             nullable=False,
         ),
-        sa.CheckConstraint("balance >= 0", name="ck_wallets_balance_non_negative"),
+        sa.CheckConstraint(
+            "balance >= 0", name="ck_wallets_balance_non_negative"
+        ),
         sa.PrimaryKeyConstraint("id"),
     )
     # ### end Alembic commands ###

@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.core.exceptions import InsufficientFundsError, WalletNotFoundError
 from src.models import Wallet
 from src.repositories.wallet import WalletRepository
+from src.schemas.wallet import OperationType
 
 
 class WalletService:
@@ -32,7 +33,7 @@ class WalletService:
         self,
         wallet_id: UUID,
         amount: Decimal,
-        operation_type: str,
+        operation_type: OperationType,
     ) -> Wallet:
         wallet = await self.repository.apply_operation(
             wallet_id=wallet_id,
@@ -48,7 +49,9 @@ class WalletService:
             if existing_wallet is None:
                 raise WalletNotFoundError(f"Wallet {wallet_id} not found")
 
-            raise InsufficientFundsError(f"Insufficient funds in wallet {wallet_id}")
+            raise InsufficientFundsError(
+                f"Insufficient funds in wallet {wallet_id}"
+            )
 
         await self.session.commit()
 
